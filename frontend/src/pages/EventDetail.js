@@ -7,6 +7,7 @@ const EventDetail = () => {
     const params = useParams();
 
     const { event, events } = useRouteLoaderData('event-detail');
+    console.log(event)
     return (
       <>
           <Suspense fallback={<p style={{textAlign : 'center'}}>Loading...</p>}>
@@ -26,11 +27,11 @@ const EventDetail = () => {
 export default EventDetail;
 
 async function loadEvent (id) {
-    const response = await fetch('http://localhost:8080/events/' + id);
+    const response = await fetch('http://localhost:8080/events1/' + id);
 
     if (!response.ok) {
         throw json(
-          { message: 'Could not fetch data for this event' },
+          { message: 'Could not fetch data for this detail event' },
           { status: 500 }
         );
     } else {
@@ -59,7 +60,7 @@ export async function loader ({ request, params }) {
 
     return defer({
           event: await loadEvent(id),   //to await to move to the page (first wait for the event and thn move to the page)
-          events: loadEvents()
+          events: await loadEvents()
       }
     );
 

@@ -9,12 +9,14 @@ function ErrorPage () {
     const error = useRouteError();
 
   //  const errorData = JSON.parse(error.data);  //when use throw Response
-
+  //
+  //
     let title = "An error occurred!";
     let message = "Could not find this page";
 
 
     if (error.status === 500){
+        console.log("ERROR_BODY ", error.message)
       //  message = errorData.message;   // JSON.parse if use throw Response
         message = error.data.message;
     }
@@ -27,7 +29,6 @@ function ErrorPage () {
     return <Fragment>
         <MainNavigation/>
         <PageContent title = {title}>
-
         <h1>
             <p>{message}</p>
         </h1>

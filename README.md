@@ -44,6 +44,7 @@ The documentation can be found https://reactrouter.com/en/main
    - function App () {
          return <RouterProvider router={router}/>;
      }
+- in place where we want to display all pages - RootLayout -add <Outlet/>
 
 - To reach the route (navigate) to it
     - import { NavLink } from 'react-router-dom';
@@ -77,3 +78,25 @@ The documentation can be found https://reactrouter.com/en/main
 - To go back   <p><Link to = ".." relative='path'>Back</Link></p>
 
 
+- Loader property
+    to perform the action while navigation to page add loader property to router
+    -  loader: eventsLoader, //eventsLoader - function which is executed just before the react navigate to the page, as a rule this function is defined at the component/page we need these data
+    - at the page the data returned from loader is available
+        import { useLoaderData } from 'react-router-dom';
+        const {events} = useLoaderData();
+    -
+
+- Loading route indicator
+    It is visible NOT at the page that is loaded but on lower level, which is already rendered (RootLayout)
+    import { useNavigation} from 'react-router-dom';
+    const navigation = useNavigation();
+    navigation.state can be 'loading'/'submiting'/'idle'
+        {navigation.state === 'loading' && <p>Loading... </p>}
+
+- Reflecting Loading page state
+- Handling message
+   if error occurred and new Error is thrown, ReactRouter renders the closest ErrorElement (in router.index)
+    then trow error
+        OR
+    import { json } from 'react-router-dom';
+    use  throw json({message: "TExt"}, {status: 500}) if !response.ok
