@@ -1,13 +1,14 @@
 import React, { Suspense } from 'react';
 import { useRouteLoaderData, json, defer, Await } from 'react-router-dom';
 import EventsList from '../components/EventsList';
+import Loader from '../components/Loader';
 function EventsPage () {
     const {events} = useRouteLoaderData('events'); // data that returns from loader
 
     // <Suspense> - to display fallBack while data is loading
     //  {(loadedEvents)=> <EventsList events={loadedEvents}/>}   // function that reurns when data is loaded
     return (
-      <Suspense fallback={<p style={{textAlign : 'center'}}>Loading...</p>}>
+      <Suspense fallback={<p style={{textAlign : 'center'}}><Loader/></p>}>
           <Await resolve={events}>
               {loadedEvents => <EventsList events={loadedEvents}/>}
           </Await>
