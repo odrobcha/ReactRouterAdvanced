@@ -83,7 +83,7 @@ The documentation can be found https://reactrouter.com/en/main
     -  loader: eventsLoader, //eventsLoader - function which is executed just before the react navigate to the page, as a rule this function is defined at the component/page we need these data
     - at the page the data returned from loader is available
         import { useLoaderData } from 'react-router-dom';
-        const {events} = useLoaderData(PATH or ID);
+        const {events} = useLoaderData(ID);
     - to use async and perform few action add
 
         export async function loader () {
