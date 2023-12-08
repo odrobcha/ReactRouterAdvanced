@@ -16,7 +16,6 @@ function ErrorPage () {
 
 
     if (error.status === 500){
-        console.log("ERROR_BODY ", error.message)
       //  message = errorData.message;   // JSON.parse if use throw Response
         message = error.data.message;
     }

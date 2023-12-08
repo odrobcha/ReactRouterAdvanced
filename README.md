@@ -83,8 +83,36 @@ The documentation can be found https://reactrouter.com/en/main
     -  loader: eventsLoader, //eventsLoader - function which is executed just before the react navigate to the page, as a rule this function is defined at the component/page we need these data
     - at the page the data returned from loader is available
         import { useLoaderData } from 'react-router-dom';
-        const {events} = useLoaderData();
-    -
+        const {events} = useLoaderData(PATH or ID);
+    - to use async and perform few action add
+
+        export async function loader () {
+            // React hooks can NOT be used here
+            return defer({
+                events: await loadEvents()    // to execute function which return promise
+                event: await loadEvent(id)
+                .....
+            });
+
+        }
+
+        - to ReactRouter will wait till data is fetched
+
+         const {events} = useRouteLoaderData('events'); // data that returns from loader
+        return
+        <Suspense fallback={<p style={{textAlign : 'center'}}>Loading...</p>}>
+               <Await resolve={events}>
+                    {loadedEvents => <EventsList events={loadedEvents}/>}
+                </Await>
+         </Suspense>
+
+        - it there is error,  router will render the closest ErrorElement
+        - Handling Error
+           if error occurred and new Error is thrown, ReactRouter renders the closest ErrorElement (in router.index)
+            then trow error
+                OR
+            import { json } from 'react-router-dom';
+            use  throw json({message: "TExt"}, {status: 500}) if !response.ok
 
 - Loading route indicator
     It is visible NOT at the page that is loaded but on lower level, which is already rendered (RootLayout)
@@ -93,10 +121,5 @@ The documentation can be found https://reactrouter.com/en/main
     navigation.state can be 'loading'/'submiting'/'idle'
         {navigation.state === 'loading' && <p>Loading... </p>}
 
-- Reflecting Loading page state
-- Handling message
-   if error occurred and new Error is thrown, ReactRouter renders the closest ErrorElement (in router.index)
-    then trow error
-        OR
-    import { json } from 'react-router-dom';
-    use  throw json({message: "TExt"}, {status: 500}) if !response.ok
+
+

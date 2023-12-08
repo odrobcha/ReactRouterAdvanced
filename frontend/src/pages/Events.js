@@ -2,11 +2,7 @@ import React, { Suspense } from 'react';
 import { useRouteLoaderData, json, defer, Await } from 'react-router-dom';
 import EventsList from '../components/EventsList';
 function EventsPage () {
-    const {events} = useRouteLoaderData('events'); // data that returns from loader
-
-    console.log(events)
-
-
+    const {events} = useRouteLoaderData('/'); // data that returns from loader
 
     // <Suspense> - to display fallBack while data is loading
     //  {(loadedEvents)=> <EventsList events={loadedEvents}/>}   // function that reurns when data is loaded

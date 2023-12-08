@@ -8,9 +8,6 @@ function EventForm ({ method, event }) {
     const navigation = useNavigation();
     const isSubmitting = navigation.state === 'submitting';
 
-    console.log('isSubmitting');
-    console.log(isSubmitting);
-
     const data = useActionData();
 
 
