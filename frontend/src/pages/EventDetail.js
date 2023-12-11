@@ -61,7 +61,7 @@ export async function loader ({ request, params }) {
 
     return defer({
           event: await loadEvent(id),   //to await to move to the page (first wait for the event and thn move to the page)
-          events: await loadEvents()
+          events: loadEvents()
       }
     );
 

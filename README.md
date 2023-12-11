@@ -5,7 +5,7 @@
     `cd frontend`
     `npm run start`
 
-##Router
+###Router
 The documentation can be found https://reactrouter.com/en/main
 - To install router run `npm install react-router-dom`
 - Create router/index.js
@@ -41,10 +41,10 @@ The documentation can be found https://reactrouter.com/en/main
 - in App.js
    - import { RouterProvider } from 'react-router-dom';
    - import router from './router/index';
-   - function App () {
+   - `function App () {
          return <RouterProvider router={router}/>;
-     }
-- in place where we want to display all pages - RootLayout -add <Outlet/>
+     }`
+     - in place where we want to display all pages - RootLayout -add <Outlet/>
 
 - To reach the route (navigate) to it
     - import { NavLink } from 'react-router-dom';
@@ -82,8 +82,14 @@ The documentation can be found https://reactrouter.com/en/main
     to perform the action while navigation to page add loader property to router
     -  loader: eventsLoader, //eventsLoader - function which is executed just before the react navigate to the page, as a rule this function is defined at the component/page we need these data
     - at the page the data returned from loader is available
+        import { useRouteLoaderData } from 'react-router-dom';
+        const {events} =useRouteLoaderData(ID);
+
+        OR if it is the direct page with loader
+
         import { useLoaderData } from 'react-router-dom';
-        const {events} = useLoaderData(ID);
+        const {events} = useLoaderData();
+
     - to use async and perform few action add
 
         export async function loader () {
@@ -99,6 +105,8 @@ The documentation can be found https://reactrouter.com/en/main
         - to ReactRouter will wait till data is fetched
 
          const {events} = useRouteLoaderData('events'); // data that returns from loader
+
+
         return
         <Suspense fallback={<p style={{textAlign : 'center'}}>Loading...</p>}>
                <Await resolve={events}>
@@ -112,7 +120,7 @@ The documentation can be found https://reactrouter.com/en/main
             then trow error
                 OR
             import { json } from 'react-router-dom';
-            use  throw json({message: "TExt"}, {status: 500}) if !response.ok
+            use  throw json({message: "Text"}, {status: 500}) if !response.ok
 
 - Loading route indicator
     It is visible NOT at the page that is loaded but on lower level, which is already rendered (RootLayout)
@@ -121,5 +129,58 @@ The documentation can be found https://reactrouter.com/en/main
     navigation.state can be 'loading'/'submiting'/'idle'
         {navigation.state === 'loading' && <p>Loading... </p>}
 
+- To redirect page
+    import { redirect } from 'react-router-dom';
+    redirect('/events');
 
+- To send form data
+    - add actions in router.js to needed route. This action is as a rule define in the component that need these data
+    - import {Form} from 'react-router-dom';
+            !!!! Form will NOT be sent to BE, but all data will be sent to action in Router
+    - all fields has to have field name attribute
+    - {request, params} is sent automatically to route action, by clicking <button type='submit'> inside <Form>
+    - request contains all form data
+    - to get form data => formData = await request.formData();
+    - data.get('fieldName');
+    - to set error data (for validation) return {validationError : "Error"}
+      to access this error => data.validationError
 
+      - to trigger action programatically
+        - import {useSubmit} from 'react-router-dom'
+        - const submit = useSubmit();
+        - submit(DATA, {method: 'delete'}, ROUTE_PATH) - will trigger action, which defined in router, ROUTE_PATH if the action if defined in another route
+
+    - To handle the response data from the action
+        - import { useActionData } from 'react-router-dom';
+        - const data = useActionData();
+        - data is set when action return some data ether From BackEnd or by validation
+
+- useFetcher
+    - import {useFetcher} from 'react-router-dom';
+    - const fetcher = useFetcher()
+    - fetcher.Form - will still trigger the action, but will not initialize the route transition
+      It means that the action will dispatch without navigation to this page
+      therefore add the action='pathToPage' which action has to be dispatched.
+
+     - const {data, state} = fetcher; to get data of from fetcher
+        - state - 'idle/loading/submitting'
+        - use the state to change UI
+
+-Defer loading
+    - import { defer, Await } from 'react-router-dom';
+    - import { Suspense } from 'react';
+    - make loaderFunction separate function(async func)
+
+    - export async function loader () {
+          // React hooks can NOT be used here
+          return defer({
+              events: await loaderFunction()    // to execute function which return promise
+              data: await secondLoaderFunction() // Execute here
+          });
+      }
+      //omit await if we do not nee to wait some data
+      -We still have access to loaded data  const {events} = useRouteLoaderData('events'); OR const {data} = useLoaderData(); (if it is root page)
+    - return <Await resolve=events>
+                 <Suspense fallback={<Loader/>}>  // Is us to to fallback while we fetching the data
+                {loadedEvents => <EventsList events={loadedEvents}/>} //await will wait till data loaded and will call this func  with loadedEvents automatically
+             </Await>
