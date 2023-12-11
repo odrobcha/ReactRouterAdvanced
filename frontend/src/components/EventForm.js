@@ -10,7 +10,6 @@ function EventForm ({ method, event }) {
 
     const data = useActionData();
 
-
     function cancelHandler () {
         navigate('..');
     }
@@ -36,7 +35,6 @@ function EventForm ({ method, event }) {
                 id="title"
                 type="text"
                 name="title"
-
                 defaultValue={event ? event.title : ''}
               />
           </p>
@@ -90,7 +88,7 @@ function EventForm ({ method, event }) {
 export default EventForm;
 
 export async function action ({request, params}) {
-    const method = request.method;
+    const method = request.method;  // method defined in <Form>
     const data = await request.formData();
     //  const enteredTitle = data.get('title') //get() method extracts data from field with the given name in form
 
@@ -120,7 +118,6 @@ export async function action ({request, params}) {
           body: JSON.stringify(eventData)
       }
     );
-
 
     if(response.status === 422){
         return response;

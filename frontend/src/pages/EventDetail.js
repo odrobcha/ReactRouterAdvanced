@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { useParams, useRouteLoaderData, json, redirect, defer, Await } from 'react-router-dom';
+import { useParams, useRouteLoaderData, json, redirect, defer, Await} from 'react-router-dom';
 import EventItem from '../components/EventItem';
 import EventsList from '../components/EventsList';
 
@@ -7,7 +7,8 @@ const EventDetail = () => {
     const params = useParams();
 
     const { event, events } = useRouteLoaderData('event-detail');
-    console.log(event)
+
+
     return (
       <>
           <Suspense fallback={<p style={{textAlign : 'center'}}>Loading...</p>}>
@@ -27,7 +28,7 @@ const EventDetail = () => {
 export default EventDetail;
 
 async function loadEvent (id) {
-    const response = await fetch('http://localhost:8080/events1/' + id);
+    const response = await fetch('http://localhost:8080/events/' + id);
 
     if (!response.ok) {
         throw json(
